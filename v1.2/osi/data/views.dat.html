@@ -1,0 +1,367 @@
+[Row:ColorViewBrowseEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[ColorName]</td>
+				<td class="osiTextLeft">[ColorReference]</td>
+				<td class="osiTextCenter">[OSIMatch]</td>
+				<td class="osiTextCenter">[OSIMustCoat]</td>
+				<td class="osiTextCenter">[LRV]</td>
+			</tr>
+[/Row:ColorViewBrowseEntry]
+
+
+[Row:ColorViewTableEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[ColorName]</td>
+				<td class="osiTextLeft">[ManufacturerName]</td>
+				<td class="osiTextLeft">[ColorReference]</td>
+				<td class="osiTextCenter">[OSIMatch]</td>
+				<td class="osiTextCenter">[OSIMustCoat]</td>
+				<td class="osiTextCenter">[LRV]</td>
+			</tr>
+[/Row:ColorViewTableEntry]
+
+[Row:ColorEditBrowseEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[ManufacturerName]</td>
+				<td class="osiTextLeft">[ColorName]</td>
+				<td class="osiTextLeft">[ColorReference]</td>
+				<td class="osiTextCenter">[LastAccess]</td>
+				<td class="osiTextCenter">[LastUser]</td>
+				<td class="osiTextCenter">[ActionsList]</td>
+			</tr>
+[/Row:ColorEditBrowseEntry]
+
+[Row:ColorEditTableEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[ColorName]</td>
+				<td class="osiTextLeft">[ManufacturerName]</td>
+				<td class="osiTextLeft">[ColorReference]</td>
+				<td class="osiTextCenter">[LastAccess]</td>
+				<td class="osiTextCenter">[LastUser]</td>
+				<td class="osiTextCenter">[ActionsList]</td>
+			</tr>
+[/Row:ColorEditTableEntry]
+
+[Row:ManufacturerEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[ManufacturerName]</td>
+				<td class="osiTextCenter">[ActionsList]</td>
+			</tr>
+[/Row:ManufacturerEntry]
+
+[Row:PermissionsEntry]
+			<tr class="osiAltBG">
+				<td class="permissions">[MaskName][MaskToggle][MaskPermissions]</td>
+				<td class="members">[MemberCount]</td>
+				<td class="permActions">[ActionsList]</td>
+			</tr>
+[/Row:PermissionsEntry]
+
+[Row:UserEntry]
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">[Username]</td>
+				<td class="osiTextLeft">[MaskName]</td>
+				<td class="osiTextCenter">[AcctStatus]</td>
+				<td class="osiTextCenter">[ActionsList]</td>
+			</tr>
+[/Row:UserEntry]
+
+[Section:ColorCategoryBrowse]
+<div class="osiCategoryBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<div class="osiHeaderLeft">Showing all colors for: [ManufacturerName]</div>
+		<div class="osiHeaderRight">
+			<form action="[FormAction]" id="manufacturerSelector" method="post">
+			Select Manufacturer: [ManufacturerList]
+			</form>
+		</div>
+	</div>
+	<div class="osiContent">
+		<div style="width: 800px; height: 25px;">[ExportOptions]</div>
+		<br />
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft" style="width: 200px;">Color</th>
+					<th class="osiHeadLeft" style="width: 120px;">Reference</th>
+					<th class="osiHeadCenter" style="width: 90px;">Match</th>
+					<th class="osiHeadCenter" style="width: 90px;">Must Coat</th>
+					<th class="osiHeadCenter" style="width: 80px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody id="replace">
+				[Row:ColorViewBrowseEntry]
+			</tbody>
+		</table>
+	</div>
+</div>
+[/Section:ColorCategoryBrowse]
+
+[Section:ColorTableBrowse]
+<div class="osiTableBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<form action="[FormAction]" method="post" id="searchForm">
+		<input type="hidden" name="standardForm" value="yes" />
+		<div class="osiHeaderLeft">Showing Results for: [SearchRequest]</div>
+		<div class="osiHeaderRight">Search: <input type="text" name="colorSearch" />
+			<input type="submit" value="Go" />
+		</div>
+		</form>
+		<script language="javascript" type="text/javascript">
+			document.forms['searchForm'].elements['colorSearch'].focus();
+		</script>
+		</div>
+	<div class="osiContent">
+		<div style="width: 800px; height: 25px;">[ExportOptions]</div>
+		<br />
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft" style="width: 220px;">Color</th>
+					<th class="osiHeadLeft" style="width: 160px;">Manufacturer</th>
+					<th class="osiHeadLeft" style="width: 100px;">Reference</th>
+					<th class="osiHeadCenter" style="width: 90px;">Match</th>
+					<th class="osiHeadCenter" style="width: 90px;">Must Coat</th>
+					<th class="osiHeadCenter" style="width: 80px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody id="replace">
+				[Row:ColorViewTableEntry]
+			</tbody>
+		</table>
+	</div>
+</div>
+[/Section:ColorTableBrowse]
+
+[Section:ColorCategoryEdit]
+<div class="osiCategoryEdit">
+	<div class="osiHeader" style="width: 870px;">
+		<form action="[FormAction]" method="post">
+		<div class="osiHeaderLeft">[ManufacturerName]</div>
+		<div class="osiHeaderRight">
+			[ManufacturerList]
+			<input type="submit" value="Select" />
+			</div>
+		</form>
+	</div>
+	<div class="osiContent">
+		<table>
+			<tr>
+				<th class="osiHeadLeft" style="width: 230px;">Color</th>
+				<th class="osiHeadLeft" style="width: 140px;">Reference</th>
+				<th class="osiHeadCenter" style="width: 180px;">Last Accessed</th>
+				<th class="osiHeadCenter" style="width: 140px;">Last User</th>
+				<th class="osiHeadCenter" style="width: 120px;">Actions</th>
+			</tr>
+			[Row:ColorEditBrowseEntry]
+		</table>
+	</div>
+</div>
+[/Section:ColorCategoryEdit]
+
+[Section:ColorTableEdit]
+<div class="osiTableEdit">
+	<div class="osiHeader" style="width: 940px;">
+		<form action="[FormAction]" method="post" id="searchForm">
+		<input type="hidden" name="standardForm" value="yes" />
+		<div class="osiHeaderLeft">Showing Results for: [SearchRequest]</div>
+		<div class="osiHeaderRight">
+			<input type="hidden" name="editMode" value="on" />
+			Search: <input type="text" name="colorSearch" />
+			<input type="submit" value="Go" />
+		</div>
+		</form>
+		<script language="javascript" type="text/javascript">
+			document.forms['searchForm'].elements['colorSearch'].focus();
+		</script>
+	</div>
+	<div class="osiContent">
+		<table>
+			<tr>
+				<th class="osiHeadLeft" style="width: 180px;">Color</th>
+				<th class="osiHeadLeft" style="width: 180px;">Manufacturer</th>
+				<th class="osiHeadLeft" style="width: 100px;">Reference</th>
+				<th class="osiHeadCenter" style="width: 160px;">Last Accessed</th>
+				<th class="osiHeadCenter" style="width: 140px;">Last User</th>
+				<th class="osiHeadCenter" style="width: 120px;">Actions</th>
+			</tr>
+			[Row:ColorEditTableEntry]
+		</table>
+	</div>
+</div>
+[/Section:ColorTableEdit]
+
+[Section:PermissionsBrowse]
+<div class="osiPermissionsBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<div class="osiHeaderLeft">Permission Masks</div>
+		<div class="osiHeaderRight">
+			<form action="[FormAction]" method="post">
+				<input type="submit" value="Create Permission Mask" />
+			</form>
+		</div>
+	</div>
+	<div class="osiContent">
+		<table>
+			<tr>
+				<th class="osiHeadCenter">Mask Name</th>
+				<th class="osiHeadCenter">Members</th>
+				<th class="osiHeadCenter">Actions</th>
+			</tr>
+			[Row:PermissionsEntry]
+		</table>
+	</div>
+</div>
+[/Section:PermissionsBrowse]
+
+[Section:ManufacturerBrowse]
+<div class="osiManufacturerBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<div class="osiHeaderLeft">Manufacturers</div>
+		<div class="osiHeaderRight">
+			<form action="[FormAction]" method="post" id="createManufacturerForm">
+			<input type="text" value="Enter Manufacturer Name" size="30" name="manufacturer" onfocus="this.select();" onmouseup="return false;" />
+			<input type="submit" value="Create New Manufacturer" />
+			</form>
+		</div>
+	</div>
+	<div class="osiContent">
+		<table>
+			<tr>
+				<th class="osiHeadLeft" style="width: 270px;">Manufacturer Name</th>
+				<th class="osiHeadCenter" style="width: 120px;">Actions</th>
+			</tr>
+			[Row:ManufacturerEntry]
+		</table>
+	</div>
+</div>
+[/Section:ManufacturerBrowse]
+
+[Section:UserBrowse]
+<div class="osiUserBrowse">
+	<div class="osiHeader" style="width: 860px;">
+		<div class="osiHeaderLeft">User Acounts</div>
+		<div class="osiHeaderRight">
+			<form action="[FormAction]" method="post">
+			<input type="submit" value="Create New User" />
+			</form>
+		</div>
+	</div>
+	<div class="osiContent">
+		<table>
+			<tr>
+				<th class="osiHeadLeft" style="width: 170px;">Username</th>
+				<th class="osiHeadLeft" style="width: 200px;">Permission Mask</th>
+				<th class="osiHeadCenter" style="width: 150px;">Status</th>
+				<th class="osiHeadCenter" style="width: 280px;">Actions</th>
+			</tr>
+			[Row:UserEntry]
+		</table>
+	</div>
+</div>
+[/Section:UserBrowse]
+
+[Section:ManufacturerNotFound]
+<div class="osiCategoryBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<form action="[FormAction]" id="manufacturerSelector" method="post">
+		<div class="osiHeaderLeft">Showing all colors for: [ManufacturerName]</div>
+		<div class="osiHeaderRight">
+			Select Manufacturer: [ManufacturerList]
+		</div>
+		</form>
+	</div>
+	<div class="osiContent" style="width: 710px;">
+		<p>[Msg:ManufacturerNotFound]</p>
+	</div>
+</div>
+[/Section:ManufacturerNotFound]
+
+[Section:ColorNotFound]
+<div class="osiTableBrowse">
+	<div class="osiHeader" style="width: 800px;">
+		<form action="[FormAction]" method="post" id="searchForm">
+		<input type="hidden" name="standardForm" value="yes" />
+		<div class="osiHeaderLeft">Showing Results for: [SearchRequest]</div>
+		<div class="osiHeaderRight">
+			Search: <input type="text" name="colorSearch" />
+			<input type="submit" value="Go" />
+		</div>
+		</form>
+
+		<script language="javascript" type="text/javascript">
+			document.forms['searchForm'].elements['colorSearch'].focus();
+		</script>
+	</div>
+	<div class="osiContent">
+		[Msg:ColorNotFound]
+	</div>
+</div>
+[/Section:ColorNotFound]
+
+[Section:EditColorNotFound]
+<div class="osiTableEdit">
+	<div class="osiHeader" style="width: 940px;">
+		<form action="[FormAction]" method="post" id="searchForm">
+		<input type="hidden" name="standardForm" value="on" />
+		<div class="osiHeaderLeft">Showing Results for: [SearchRequest]</div>
+		<div class="osiHeaderRight">
+			<input type="hidden" name="editMode" value="yes" />
+			Search: <input type="text" name="colorSearch" />
+			<input type="submit" value="Go" />
+		</div>
+		</form>
+
+		<script language="javascript" type="text/javascript">
+			document.forms['searchForm'].elements['colorSearch'].focus();
+		</script>
+	</div>
+	<div class="osiContent">
+		[Msg:ColorNotFound]
+	</div>
+</div>
+[/Section:EditColorNotFound]
+
+
+[Section:ColorTableHTMLExport]
+<div class="osiTableBrowse">
+	<div class="osiContent">
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft" style="width: 220px;">Color</th>
+					<th class="osiHeadLeft" style="width: 160px;">Manufacturer</th>
+					<th class="osiHeadLeft" style="width: 100px;">Reference</th>
+					<th class="osiHeadCenter" style="width: 90px;">Match</th>
+					<th class="osiHeadCenter" style="width: 90px;">Must Coat</th>
+					<th class="osiHeadCenter" style="width: 80px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody id="replace">
+				[Row:ColorViewTableEntry]
+			</tbody>
+		</table>
+	</div>
+</div>
+[/Section:ColorTableHTMLExport]
+
+[Section:SplashPage]
+<h2 class="splash">OSI Color Reference Manager</h2>
+<table class="splash">
+	<tr>
+		<td class="splashLeft">
+		<h3>Welcome, [Username]!</h3>
+		<p>This software is designed to streamline the sharing of sealant matching information between company associates.  By keeping our sealant references stored in an online database administrators can update the catalog with new matches which become immediately available to the rest of the users.</p>
+		<br />
+		<p><span style="font-weight: bold;">Update Released - v1.1.1 - 07/18/13</span><br />
+		The OSI software has been updated.  A bug was introduced that interfered with a moderator's ability to edit colors.  This patch addresses the issue.  (Note: Standard users were unaffected by this bug.)<br /><a href="osi.php?a=changelog">Click here to view the changes.</a></p>
+		</td>
+		<td class="splashRight">
+		<h3>User Resources</h3>
+		[UserManual]
+		[BlankOSIFile]
+		[BlankColorsFile]
+		</td>
+	</tr>
+</table>
+[/Section:SplashPage]
