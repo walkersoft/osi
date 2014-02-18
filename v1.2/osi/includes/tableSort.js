@@ -24,7 +24,10 @@ function initHeaders(table) {
 	}
 }
 
-
+var lastCol = "";
+var curCol = "";
+var lastNdx = -1;
+var curNdx = -1;
 function tableSort(e) {
 
 	var runs = 0;
@@ -45,10 +48,28 @@ function tableSort(e) {
 	ndx = e.cellIndex;
 
 	//Toggle between "asc" and "desc" depending on element's id attribute
+
+	if(curNdx == -1 && lastNdx == -1) {  //Index for sorted column not yet set
+		curNdx = lastNdx = ndx;
+	}
+
+	if(lastCol == "" && curCol == "") {  //Title for sorted column not yet set
+		curCol = lastCol = e.innerHTML;
+	}
+
+
+	if(lastNdx != ndx) { //clicked a different column
+		document.getElementById(tableID).rows[0].cells[lastNdx].innerHTML = lastCol;
+		lastCol = curCol = e.innerHTML;
+		lastNdx = ndx;
+	}
+
 	if(e.id == "asc") {
 		e.id = "desc";
+		e.innerHTML = curCol + " (Desc)";
 	} else {
 		e.id = "asc";
+		e.innerHTML = curCol + " (Asc)";
 	}
 
 	//Move up from the <th> that was clicked and find the parent table element.

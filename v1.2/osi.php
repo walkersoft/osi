@@ -14,7 +14,7 @@ define("WINDOWS",true);
 //Change this path to match where the session directory is located
 //relative to DOCUMENT_ROOT
 //Default for production environment: /osi/sessions
-define("SESSIONS","/osi/latest/osi/sessions");
+define("SESSIONS","/osi/v1.2/osi/sessions");
 
 //DEFINE SOME DIRECTORY LOCATIONS
 define("OSI","osi/");
