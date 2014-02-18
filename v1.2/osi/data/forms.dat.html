@@ -1,0 +1,516 @@
+[Form:CreateUser]
+<form action="[FormAction]" method="post" id="newUserForm">
+	<h2>New User Account</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Username</span><br /><span class="form">The username must be at least three characters and use only alphanumeric characters, underscores, and spaces.</span></td><td class="fieldLeft"><input type="text" name="username" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Create Password</span><br /><span class="form">A strong password will have at least one uppercase letter, one lowercase letter, and one number.</span></td><td class="fieldLeft"><input type="password" name="pw1" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Confirm Password</span><br /><span class="form">Confirm the account password to ensure it is correct.</span></td><td class="fieldLeft"><input type="password" name="pw2" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Permission Mask</span><br /><span class="form">Assign the user to a permission mask.  This will grant that mask's permissions to the user.</span></td>
+			<td class="fieldLeft">
+				[PermissionMasksList]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Account Status</span><br /><span class="form">Only active user accounts can access the software.</span></td><td class="fieldLeft"><input type="radio" name="status" id="accountActive" value="active" checked="checked" /> Active <input type="radio" name="status" id="accountDisabled" value="disabled" /> Disabled </td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /> <input type="submit" value="Create User Account" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['newUserForm'].elements['username'].focus();
+</script>
+[/Form:CreateUser]
+
+[Form:EditUser]
+<form action="[FormAction]" method="post" id="editUserForm">
+	<input type="hidden" name="userid" value="[UserID]" />
+	<h2>Edit User Account</h2>
+	<table>
+		<tr>
+			<td class="title"><span class="title">Username</span></td><td class="fieldLeft">[Username]</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Permission Mask</span><br /><span class="form">Assign the user to a permission mask.  This will grant that mask's permissions to the user.</span></td>
+			<td class="fieldLeft">
+				[PermissionMasksList]
+			</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Account Status</span><br /><span class="form">Disable a user account to prevent the user from accessing the system. Takes effect at the user's next login.</span></td><td class="fieldLeft"><input type="radio" name="status" id="accountActive" value="active" /> Active <input type="radio" name="status" id="accountDisabled" value="disabled" /> Disabled </td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Revert Changes" /> <input type="submit" value="Edit User" /></td>
+		</tr>
+	</table>
+</form>
+[/Form:EditUser]
+
+
+[Form:EditManufacturer]
+<form action="[FormAction]" method="post" id="editManufacturerForm">
+	<input type="hidden" name="manufacturerid" value="[ManufacturerID]" />
+	<h2>Edit Manufacturer</h2>
+	<table>
+		<tr>
+			<td class="title"><span class="title">Manufacturer Name</span><br /><span class="form">All name changes are global and take effect immediately. Backup archives are NOT affected by a name change.</span></td><td class="fieldCenter"><input type="text" name="manufacturer" value="[ManufacturerName]" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Revert Changes" /> <input type="submit" value="Edit Manufacturer" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['editManufacturerForm'].elements['manufacturer'].focus();
+	document.forms['editManufacturerForm'].elements['manufacturer'].select();
+</script>
+[/Form:EditManufacturer]
+
+[Form:CreatePermissionMask]
+<form action="[FormAction]" method="post" id="createPermissionMaskForm">
+	<h2>Create Permission Mask</h2>
+	<table class="form">
+		<tr>
+			<td class="title"><span class="title">Mask Name</span></td><td class="fieldCenter"><input type="text" name="maskName" /></td>
+		</tr>
+		<tr>
+			<td class="title">
+				<span class="title">Manage Users</span><br /><span class="form">Grants permission to edit user accounts and permission masks.</span>
+			</td>
+			<td class="fieldCenter"><input type="radio" name="manageUsers" value="allow" />Allow <input type="radio" name="manageUsers" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Colors</span><br /><span class="form">Grants permission to edit colors and manufacturers.</span></td><td class="fieldCenter"><input type="radio" name="manageColors" value="allow" />Allow <input type="radio" name="manageColors" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Inventory</span><br /><span class="form">Grants permission to update sealant inventory options.</span></td><td class="fieldCenter"><input type="radio" name="manageInventory" value="allow" />Allow <input type="radio" name="manageInventory" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Options</span><br /><span class="form">Grants permission to change global program settings.</span></td><td class="fieldCenter"><input type="radio" name="manageOptions" value="allow" />Allow <input type="radio" name="manageOptions" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Database</span><br /><span class="form">Grants permission to perform database backups, restorations, and change connection settings.</span></td><td class="fieldCenter"><input type="radio" name="manageDatabase" value="allow" />Allow <input type="radio" name="manageDatabase" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Browse Colors</span><br /><span class="form">Grants permission to view color entries and export search results.</span></td><td class="fieldCenter"><input type="radio" name="browseColors" value="allow" />Allow <input type="radio" name="browseColors" value="deny" checked="checked" />Deny</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Reset Form" /> <input type="submit" value="Create Permission Mask" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['createPermissionMaskForm'].elements['maskName'].focus();
+</script>
+[/Form:CreatePermissionMask]
+
+[Form:EditPermissionMask]
+<form action="[FormAction]" method="post" id="editPermissionMaskForm">
+	<input type="hidden" name="maskid" value="[MaskID]" />
+	<h2>Edit Permission Mask</h2>
+	<table>
+		<tr>
+			<td class="title"><span class="title">Mask Name</td><td class="fieldCenter"><input type="text" name="maskName" value="[MaskName]" style="margin-left: auto; margin-right: auto;" /></td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Users</span><br /><span class="form">Grants permission to edit user accounts and permission masks.</span></td><td class="fieldCenter"><input type="radio" name="manageUsers" value="allow" id="allowManageUsers" />Allow <input type="radio" name="manageUsers" value="deny" id="denyManageUsers" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Colors</span><br /><span class="form">Grants permission to edit colors and manufacturers.</span></td><td class="fieldCenter"><input type="radio" name="manageColors" value="allow" id="allowManageColors" />Allow <input type="radio" name="manageColors" value="deny" id="denyManageColors" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Inventory</span><br /><span class="form">Grants permission to update sealant inventory options.</span></td><td class="fieldCenter"><input type="radio" name="manageInventory" value="allow" id="allowManageInventory" />Allow <input type="radio" name="manageInventory" value="deny" id="denyManageInventory" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Options</span><br /><span class="form">Grants permission to change global program settings.</span></td><td class="fieldCenter"><input type="radio" name="manageOptions" value="allow" id="allowManageOptions" />Allow <input type="radio" name="manageOptions" value="deny" id="denyManageOptions" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Manage Database</span><br /><span class="form">Grants permission to perform database backups, restorations, and change connection settings.</span></td><td class="fieldCenter"><input type="radio" name="manageDatabase" value="allow" id="allowManageDatabase" />Allow <input type="radio" name="manageDatabase" value="deny" id="denyManageDatabase" />Deny</td>
+		</tr>
+		<tr>
+			<td class="title"><span class="title">Browse Colors</span><br /><span class="form">Grants permission to view color entries and export search results.</span></td><td class="fieldCenter"><input type="radio" name="browseColors" value="allow" id="allowBrowseColors" />Allow <input type="radio" name="browseColors" value="deny" id="denyBrowseColors" />Deny</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Revert Changes" /> <input type="submit" value="Edit Permission Mask" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['editPermissionMaskForm'].elements['maskName'].focus();
+	document.forms['editPermissionMaskForm'].elements['maskName'].select();
+</script>
+[/Form:EditPermissionMask]
+
+[Form:CreateColor]
+<form action="[FormAction]" method="post" id="createColorForm">
+	<h2>Create Color Entry</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Color Name</span><br><span class="form">Enter the name of the color.  Duplicate color names in the same manufacturer are overwritten.</span></td><td class="fieldLeft"><input type="text" name="colorName" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Color Reference</span><br /><span class="form">Manufacturer specific color identifier, if applicable.</span></td><td class="fieldLeft"><input type="text" name="reference" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Manufacturer</span><br /><span class="form">Select the manufacturer that makes this color.</span></td>
+			<td class="fieldLeft">
+				[ManufacturerList]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Match</span><br /><span class="form">OSI sealant identifier for a color that is a match.</span></td>
+			<td class="fieldLeft">
+				[OSIMatch]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Must Coat</span><br /><span class="form">OSI sealant identifier for a color that is a near match.</span></td>
+			<td class="fieldLeft">
+				[OSIMustCoat]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">LRV</span><br /><span class="form">Light Reflectance Value. (0 - 99)</span></td><td class="fieldLeft"><input type="text" name="lrv" size="3" value="0" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /> <input type="submit" value="Create Color Entry" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['createColorForm'].elements['colorName'].focus();
+</script>
+[/Form:CreateColor]
+
+[Form:EditColor]
+<form action="[FormAction]" method="post" id="editColorForm">
+	<input type="hidden" name="colorid" value="[ColorID]" />
+	<h2>Edit Color Entry</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Color Name</span><br><span class="form">Change the name of the color.  Duplicate color names in the same manufacturer are overwritten.</span></td><td class="fieldLeft"><input type="text" name="colorName" value="[ColorName]" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Color Reference</span><br /><span class="form">Manufacturer specific color identifier, if applicable.</span></td><td class="fieldLeft"><input type="text" name="reference" value="[ColorReference]" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Manufacturer</span><br /><span class="form">If necessary, select a new manufacturer to associate this color with.</span></td>
+			<td class="fieldLeft">
+				[ManufacturerList]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Match</span><br /><span class="form">OSI sealant identifier for a color that is a match.</span></td>
+			<td class="fieldLeft">
+				[OSIMatch]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Must Coat</span><br /><span class="form">OSI sealant identifier for a color that is a near match.</span></td>
+			<td class="fieldLeft">
+				[OSIMustCoat]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">LRV</span><br /><span class="form">Light Reflectance Value. (0 - 99)</span></td><td class="fieldLeft"><input type="text" size="3" name="lrv" value="[LRV]" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Revert Changes" /> <input type="submit" value="Edit Color Entry" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['editColorForm'].elements['colorName'].focus();
+	document.forms['editColorForm'].elements['colorName'].select();
+</script>
+[/Form:EditColor]
+
+[Form:ManageInventory]
+<form action="[FormAction]" method="post" id="manageInventoryForm" enctype="multipart/form-data" onsubmit="this.elements['inventorySubmit'].disabled = true;">
+	<div class="osiHeader" style="width: 660px;">
+		<div class="osiHeaderLeft">Manage Sealant Inventory</div>
+		<div class="osiHeaderRight"><input type="button" id="downloadOSIFile" value="Download OSI Master File"  onclick="window.location = '[Download]';" /></div>
+	</div>
+	<table style="width: 600px;">
+		<tr>
+			<td class="title">
+				<span class="title">CSI Stock</span><br /><span class="form">List all OSI sealants (one per line) that are stored locally by Cedar Siding Inc.</span>
+			</td>
+			<td class="titleSmall">
+				<textarea cols="5" rows="8" name="csiStock" id="csiStock" style="float: right;"></textarea>
+			</td>
+			
+			<td class="title" style="padding-left: 10px;"><span class="title">Vendor Stock</span><br /><span class="form">
+			List all OSI sealants (one per line) that must be ordered in from our normal stock vendor.  Products usually arrive on the next regular truck from our vendor.
+			</td>
+			<td class="titleSmall">
+				<textarea cols="5" rows="8" name="vendorStock" id="vendorStock" style="float: right;"></textarea>
+			</td>
+		</tr>
+		<tr><td style="height: 10px;" colspan="4">&nbsp;</td></tr>
+		<tr>
+			<td class="title">
+				<span class="title">Manufacturer Stock</span><br /><span class="form">List all OSI sealants (one per line) that must be ordered directly from the manufacturer.  Products ordered usually have a two week lead time and arrive via UPS.</span>
+			</td>
+			<td class="titleSmall"><textarea cols="5" rows="8" name="osiStock" id="osiStock" style="float: right;"></textarea></td>
+			<td colspan="2" class="titleLarge" style="padding-left: 10px;"><span class="title">Upload OSI Master File</span><br /><span class="form">Specify a valid .CSV file to update the entire selection of OSI sealants available from all stock sources. Sealants that are already associated to colors will not be updated in any way.</span><br /><br />
+			<input type="file" name="uploadInventory" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="4"><input type="submit" value="Update Inventory Options" name="inventorySubmit" /></td>
+		</tr>
+	</table>
+</form>
+[/Form:ManageInventory]
+
+[Form:UploadColors]
+<form action="[FormAction]" method="post" id="uploadColorsForm" enctype="multipart/form-data" onsubmit="this.elements['sendColors'].disabled = true;">
+	<h2>Upload Colors File</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Specify Colors File</span><br /><span class="form">Select a valid .CSV file containing color entries to upload to the server.  All valid color records will be identified and read into the database.  Rows cointaining invalid data are ignored.  Colors and manufacturers that do not exist are created.  Colors that already exist within a manufacturer will be overwritten with the new information provided.</span>
+			</td>
+			<td class="titleMedium">
+			<input type="file" name="colorsFile" />
+			</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="submit" name="sendColors" value="Upload Colors File" /></td>
+		</tr>
+	</table>
+</form>
+[/Form:UploadColors]
+
+[Form:AdvancedColorSearch]
+<form action="[FormAction]" method="post" id="advancedColorSearchForm">
+	<input type="hidden" value="advancedForm" value="yes" />
+	<h2>Advanced Search</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Search Terms</span><br /><span class="form">Specify keywords of colors to search. Searches both color name and color reference fields. Default: Includes all colors.</span></td><td class="fieldLeft"><input type="text" name="colorSearch" value="All Colors" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Manufacturer</span><br /><span class="form">Pick a specific manufacturer to search under. Default: Searches in all manufacturers.</span></td>
+			<td class="fieldLeft">
+				[ManufacturerSearchList]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Match</span><br /><span class="form">Specify sealant ID for colors that are a match. Default: Includes all sealants.</span></td>
+			<td class="fieldLeft">
+				[OSISearchMatch]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">OSI Must Coat</span><br /><span class="form">Specify sealant ID for colors that are a near match. Default: Includes all sealants.</span></td>
+			<td class="fieldLeft">
+				[OSISearchMustCoat]
+			</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">LRV</span><br /><span class="form">Enter LRV criteria to match records against. Default: Matches any LRV value.</span></td>
+			<td class="fieldLeft">
+				<select name="lrvCriteria">
+					<option value="eq">Equal to...</option>
+					<option value="lt">Less than...</option>
+					<option value="gt">Greater than...</option>
+				</select>
+				<input type="text" size="3" name="lrvTarget" />
+			</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /><input type="submit" value="Search Colors" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['advancedColorSearchForm'].elements['colorSearch'].focus();
+	document.forms['advancedColorSearchForm'].elements['colorSearch'].select();
+</script>
+[/Form:AdvancedColorSearch]
+
+[Form:InstallDatabase]
+<form action="[FormAction]" method="post" id="installDatabaseForm">
+	<input type="hidden" name="dbMode" value="new" />
+	<h2>Database Setup and Installation</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Name</span><br /><span class="form">The database where tables will reside.  This database must already exist on the server.</span></td><td class="fieldCenter"><input type="text" name="dbName" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Hostname</span><br /><span class="form">The server name where the database resides. (e.g. localhost or rdbms.mydomain.com)</span></td><td class="fieldCenter"><input type="text" name="dbHost" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database User</span><br /><span class="form">User to login to the database server with.</span></td><td class="fieldCenter"><input type="text" name="dbUser" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Password</span><br /><span class="form">Password associated with the user account.</span></td><td class="fieldCenter"><input type="password" name="dbPass" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Recovery Password</span><br /><span class="form">Enter a password to secure the connection file from changes.</span></td><td class="fieldCenter"><input type="password" name="recoveryPW1" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Confirm Recovery Password</span><br /><span class="form">Confirm the recovery password.</span></td><td class="fieldCenter"><input type="password" name="recoveryPW2" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Installation</span><br /><span class="form">Select an initial database installation.  You may install a fresh database with a new administrator account or import a database from a previous backup archive.</span></td>
+			<td class="fieldLeft" style="padding-left: 30px;"><input type="radio" name="dbType" value="blank" checked="checked" /> Blank Database<br /><input type="radio" name="dbType" value="import" /> Import Database</td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /><input type="submit" value="Configure Database" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['installDatabaseForm'].elements['dbName'].focus();
+</script>
+[/Form:InstallDatabase]
+
+[Form:ReconnectDatabase]
+<form action="[FormAction]" method="post" id="reconnectDatabaseForm">
+	<input type="hidden" name="dbMode" value="existing" />
+	<h2>Database Connection Recovery</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Name</span><br /><span class="form">The database where tables will reside.  This database must already exist on the server.</span></td><td class="fieldCenter"><input type="text" name="dbName" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Hostname</span><br /><span class="form">The server name where the database resides. (e.g. localhost or rdbms.mydomain.com)</span></td><td class="fieldCenter"><input type="text" name="dbHost" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database User</span><br /><span class="form">User to login to the database server with.</span></td><td class="fieldCenter"><input type="text" name="dbUser" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Database Password</span><br /><span class="form">Password associated with the user account.</span></td><td class="fieldCenter"><input type="password" name="dbPass" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Current Recovery Password</span><br /><span class="form">Enter the current recovery password. This is required to reset the database connection settings.</span></td><td class="fieldCenter"><input type="password" name="recoveryPW" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">New Recovery Password</span><br /><span class="form">Enter a new password to secure the connection file from changes.</span></td><td class="fieldCenter"><input type="password" name="newRecoveryPW1" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Confirm New Recovery Password</span><br /><span class="form">Confirm the new recovery password.</span></td><td class="fieldCenter"><input type="password" name="newRecoveryPW2" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /><input type="submit" value="Configure Database" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['reconnectDatabaseForm'].elements['dbName'].focus();
+</script>
+[/Form:ReconnectDatabase]
+
+[Form:BackupDatabase]
+<form action="[FormAction]" method="post" id="databaseBackupForm">
+	<h2>Database Backup</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Backup Label</span><br /><span class="form">Enter a backup label.  This label will serve as the file name. Alphanumeric characters and underscores are the only characters allowed.</span></td><td class="fieldLeft"><input type="text" name="backupLabel" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Encrypt Backup (Optional)<br /><span class="form">Specify whether or not to encrypt the contents of the backup archive.</span></td><td class="fieldLeft"><input type="radio" name="encrypted" value="Y" /> Yes <input type="radio" name="encrypted" value="N" checked="checked" /> No</td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Encryption Key (Optional)<br /><span class="form">If you are using encryption with this archive you may specify a key to use with the encryption.  This key will be required to decrypt this archive in the future.  If you lose the key the system will be unable to recover the contents of the backup archive.  You may still use encryption without using an encryption key.</span></td><td class="fieldLeft"><input type="text" name="encryptKey" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" /> <input type="submit" value="Create Backup File" /></td>
+		</tr>
+	</table>
+</form>
+[/Form:BackupDatabase]
+
+[Form:ImportDatabase]
+<form action="[FormAction]" method="post" id="databaseRecoveryForm" enctype="multipart/form-data" onsubmit="return importNotice();">
+	<h2>Database Content Recovery</h2>
+	<table>
+		<tr>
+			<td class="titleLarge"><span class="title">Backup File</span><br /><span class="form">Select a backup archive to upload and process. The archive must be a valid .OSIBKF file.</span></td><td class="fieldLeft"><input type="file" name="backupFile" /></td>
+		</tr>
+		<tr>
+			<td class="titleLarge"><span class="title">Decryption Key</span><br /><span class="form">Enter your decryption key.  This only applies to archives that were encrypted with a key.  Leave this field blank if you did not use an encryption key.</span></td><td class="fieldLeft"><input type="text" name="decryptKey" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="reset" value="Clear Form" name="formClear" /><input type="submit" name="importButton" value="Import Database"></td>
+		</tr>
+	</table>
+</form>
+[/Form:ImportDatabase]
+
+[Form:AdminAccountSetup]
+<form action="[FormAction]" method="post" id="adminAccountSetupForm">
+	<h2>Administrator Account Setup</h2>
+	<table>
+		<tr>
+			<td class="titleMedium"><span class="title">Username</span></td><td class="fieldCenter"><input type="text" name="username" /></td>
+		</tr>
+		<tr>
+			<td class="titleMedium"><span class="title">Create Password</span></td><td class="fieldCenter"><input type="password" name="pw1" /></td>
+		</tr>
+		<tr>
+			<td class="titleMedium"><span class="title">Confirm Password</span></td><td class="fieldCenter"><input type="password" name="pw2" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="submit" value="Create Admin Account" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['adminAccountSetupForm'].elements['username'].focus();
+</script>
+[/Form:AdminAccountSetup]
+
+[Form:UserLogin]
+<form action="[FormAction]" method="post" id="userLoginForm">
+	<h2>User Login</h2>
+	<p class="center" style="width: 500px;">You are accessing a portion of our website that is designated for employees only.  If you are a CSI employee please enter your credentials below, otherwise please <a href="http://www.cedarsidinginc.com">return to our main website</a>.</p><br />
+	<table>
+		<tr>
+			<td class="titleSmall"><span class="title">Username</span></td><td class="field"><input type="text" name="loginID" /></td>
+		</tr>
+		<tr>
+			<td class="titleSmall"><span class="title">Password</span></td><td class="field"><input type="password" name="loginPass" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="submit" value="Login" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['userLoginForm'].elements['loginID'].focus();
+</script>
+[/Form:UserLogin]
+
+[Form:ResetPassword]
+<form action="[FormAction]" method="post" id="resetPassword">
+	<input type="hidden" name="userid" value="[UserID]" />
+	<h2>Reset Password</h2>
+	<table>
+		<tr>
+			<td class="titleMedium"><span class="title">Username</span></td><td class="field">[Username]</td>
+		</tr>
+		<tr>
+			<td class="titleMedium"><span class="title">New Password</span></td><td class="field"><input type="password" name="pw1" /></td>
+		</tr>
+		<tr>
+			<td class="titleMedium"><span class="title">Confirm Password</span></td><td class="field"><input type="password" name="pw2" /></td>
+		</tr>
+		<tr>
+			<td class="center" colspan="2"><input type="submit" value="Reset Password" /></td>
+		</tr>
+	</table>
+</form>
+<script language="javascript" type="text/javascript">
+	document.forms['resetPassword'].elements['pw1'].focus();
+</script>
+[/Form:ResetPassword]

@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<title>OSI Colors Export - February 17, 2014 1:41:06PM</title>
+	<script language="javscript" type="text/javascript">
+
+	//Change this variable to match the "id" attribute of the
+	//table that is going to be operated on.
+	var tableID = "sortable";
+
+	/**
+	 * Attach click events to all the <th> elements in a table to
+	 * call the tableSort() function. This function assumes that cells
+	 * in the first row in a table are <th> headers tags and that cells
+	 * in the remaining rows are <td> data tags.
+	 *
+	 * @param table The table element to work with.
+	 * @return void
+	 */
+	function initHeaders(table) {
+		//Get the table element
+		table = document.getElementById(table);
+		//Get the number of cells in the header row
+		var l = table.rows[0].cells.length;
+		//Loop through the header cells and attach the events
+		for(var i = 0; i < l; i++) {
+			if(table.rows[0].cells[i].addEventListener) { //For modern browsers
+				table.rows[0].cells[i].addEventListener("click", tableSort, false);
+			} else if(table.rows[0].cells[i].attachEvent) { //IE specific method
+				table.rows[0].cells[i].attachEvent("onclick", tableSort);
+			}
+		}
+	}
+
+	/**
+	 * Compares values in a column of a table and then sorts the table rows.
+	 * Subsequent calls to this function will toggle a row between ascending
+	 * and descending sort directions.
+	 *
+	 * @param e The click event passed in from the browser.
+	 * @return mixed No return value if operation completes successfully, FALSE on error.
+	 */
+	function tableSort(e) {
+
+		/**
+		 * Checks to see if a value is numeric.
+		 *
+		 * @param n The incoming value to check.
+		 * @return bool TRUE if value is numeric, FALSE otherwise.
+		 */
+		tableSort.isNumeric = function (n) {
+			var num = false;
+			if(!isNaN(n) && isFinite(n)) {
+				num = true;
+			}
+			return num;
+		}
+
+		//Get the element from the click event that was passed.
+		if(e.currentTarget) { //For modern browsers
+			e = e.currentTarget;
+		} else if(window.event.srcElement) { //IE specific method
+			e = window.event.srcElement;
+		} else {
+			//console.log("Unable to determine source event. Terminating....");
+			return false;
+		}
+
+		//Get the index of the cell, will be needed later
+		var ndx = e.cellIndex;
+
+		//Toggle between "asc" and "desc" depending on element's id attribute
+		if(e.id == "asc") {
+			e.id = "desc";
+		} else {
+			e.id = "asc";
+		}
+
+		//Move up from the <th> that was clicked and find the parent table element.
+		var parent = e.parentElement;
+		var s = parent.tagName;
+		while(s.toLowerCase() != "table") {
+			parent = parent.parentElement;
+			s = parent.tagName;
+		}
+
+		/*
+		Executes two different loops.  A "for" loop to control how many
+		times the table rows are passed looking for values to sort and a
+		"while" loop that does the actual comparing of values.  The "for"
+		loop also controls how many times the embedded "while" loop will
+		run since each iteration with force at least one table row into
+		the correct position.
+		*/
+
+		var rows = parent.tBodies[0].rows.length; //Isolate and count rows only in the <tbody> element.
+		if(rows > 1) {  //Make sure there are enough rows to bother with sorting
+			var v1;	//Value 1 placeholder
+			var v2;	//Value 2 placeholder
+			var tbody = parent.tBodies[0];	//Table body to manipulate
+
+			//Start the for loop (controls amount of table passes)
+			for(i = 0; i < rows; i++) {
+				var j = 0;	//Counter for swapping routine
+				var offset = rows - i - 1;  //Stops next loop from overchecking
+
+				//Start the while loop (controls number of comparisons to make)
+				while(j < offset) {
+
+					//Check to make sure values can be extracted before proceeding
+					if(typeof tbody.rows[j].cells[ndx].textContent !== undefined && typeof tbody.rows[j + 1].cells[ndx].textContent !== undefined) {
+
+						//Get cell values and compare
+						v1 = tbody.rows[j].cells[ndx].textContent;
+						v2 = tbody.rows[j + 1].cells[ndx].textContent;
+						if(tableSort.isNumeric(v1) && tableSort.isNumeric(v2)) {
+							//Dealing with two numbers
+							v1 = new Number(v1);
+							v2 = new Number(v2);
+							if(v1 > v2) {
+								if(e.id == "asc") { //v1 moves down
+									tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+								}
+							} else {
+								if(e.id == "desc") { //v1 moves down
+									tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+								}
+							}
+						} else if(tableSort.isNumeric(v1) && !tableSort.isNumeric(v2)) {
+							//v2 is a string, v1 is a number and automatically wins
+							if(e.id == "asc") { //v1 moves down
+								tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+							}
+						} else if(!tableSort.isNumeric(v1) && tableSort.isNumeric(v2)) {
+							//v1 is a string, v2 is a number and automatically wins
+							if(e.id == "desc") { //v1 moves down
+								tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+							}
+						} else {
+							//Both v1 and v2 are strings, use localeCompare()
+							if(v1.localeCompare(v2) > 0) {
+								if(e.id == "asc") { //v1 moves down
+									tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+								}
+							} else {
+								if(e.id == "desc") { //v1 moves down
+									tbody.insertBefore(tbody.rows[j + 1], tbody.rows[j]);
+								}
+							}
+						}
+						j++;
+					} else {
+						console.log("One of the values turned up underfined");
+					}
+				}
+			}
+		}
+	}
+
+	//Wait until DOM is ready and then initialize the table headers.
+	//This technique is actually waiting for the entire document to load,
+	//not just the DOM.
+	window.onload = function () {
+		initHeaders(tableID);
+	}
+	</script>
+	<style type="text/css">
+
+	body, a, p, span, ul, ol, li, table, th, tr, td, div, h1, h2, h3, h4, h5, h6 {
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		font-family: "Trebuchet MS", "Helvetica", Arial, sans-serif;
+		font-size: 16px;
+	}
+
+	body {
+		width: 1000px;
+		margin-left: auto;
+		margin-right: auto;
+		background: #d6d1b7;
+	}
+
+	h2 {
+		font-size: 20px;
+		text-align: center;
+	}
+
+	tr.osiAltBG:hover {
+		background: #fffacd;
+	}
+
+	th {
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+	th.osiHeadLeft {
+		text-align: left;
+	}
+
+	th.osiHeadCenter {
+		text-align: center;
+	}
+
+	td.osiTextLeft {
+		text-align: left;
+	}
+
+	td.osiTextCenter {
+		text-align: center;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#header {
+		width: 100%;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+		padding 5px;
+	}
+
+	#content {
+		padding: 5px;
+	}
+
+	#footer {
+		width: 100%;
+		padding: 5px;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+	}
+
+	p {
+		text-align: center;
+	}
+
+	</style>
+</head>
+<body>
+
+<div id="header">
+
+	<h2>OSI Colors Export</h2>
+	<p>Created for user: jwalker on February 17, 2014 1:41:06PM</p>
+
+</div>
+
+<div id="content">
+
+	
+<div class="osiTableBrowse">
+	<div class="osiContent">
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft" style="width: 220px;">Color</th>
+					<th class="osiHeadLeft" style="width: 160px;">Manufacturer</th>
+					<th class="osiHeadLeft" style="width: 100px;">Reference</th>
+					<th class="osiHeadCenter" style="width: 90px;">Match</th>
+					<th class="osiHeadCenter" style="width: 90px;">Must Coat</th>
+					<th class="osiHeadCenter" style="width: 80px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Bright White</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">005</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Butter Cream</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">634</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Cocoa</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">274</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Culinary Herb</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">746</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Dark Khaki</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">338</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Desert Sand</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">405</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Ebony Gray</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">839</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI English Walnut</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">253</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Garden Sage</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">729</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Harborside Grey</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">537</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Marine Grey</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">723</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Midnight Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">838</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Roasted Almond</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">451</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Rustic Red</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">907</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Sky Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Summer Wheat</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">445</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+</div>
+
+<div id="footer">
+
+	<p>Generated by: OSI Color Reference Manager v1.1.1</p>
+
+</div>
+
+
+</body>
+</html>
