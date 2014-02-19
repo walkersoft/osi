@@ -1,0 +1,1215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<title>OSI Colors Export - February 19, 2014 2:17:56PM</title>
+	<script language="javscript" type="text/javascript">
+
+	var tableID = "sortable";
+
+/**
+ * Attach click events to all the <th> elements in a table to
+ * call the tableSort() function. This function assumes that cells
+ * in the first row in a table are <th> headers tags and that cells
+ * in the remaining rows are <td> data tags.
+ *
+ * @param table The table element to work with.
+ * @return void
+ */
+function initHeaders(table) {
+	//Get the table element
+	table = document.getElementById(table);
+	//Get the number of cells in the header row
+	var l = table.rows[0].cells.length;
+	//Loop through the header cells and attach the events
+	for(var i = 0; i < l; i++) {
+		if(table.rows[0].cells[i].addEventListener) { //For modern browsers
+			table.rows[0].cells[i].addEventListener("click", tableSort, false);
+		} else if(table.rows[0].cells[i].attachEvent) { //IE specific method
+			table.rows[0].cells[i].attachEvent("onclick", tableSort);
+		}
+	}
+}
+
+var lastCol = "";
+var curCol = "";
+var lastNdx = -1;
+var curNdx = -1;
+function tableSort(e) {
+
+	var runs = 0;
+	var ndx = 0;
+	var dir = "right";
+
+	//Get the element from the click event that was passed.
+	if(e.currentTarget) { //For modern browsers
+		e = e.currentTarget;
+	} else if(window.event.srcElement) { //IE specific method
+		e = window.event.srcElement;
+	} else {
+		console.log("Unable to determine source event. Terminating....");
+		return false;
+	}
+
+	//Get the index of the cell, will be needed later
+	ndx = e.cellIndex;
+
+	//Toggle between "asc" and "desc" depending on element's id attribute
+
+	if(curNdx == -1 && lastNdx == -1) {  //Index for sorted column not yet set
+		curNdx = lastNdx = ndx;
+	}
+
+	if(lastCol == "" && curCol == "") {  //Title for sorted column not yet set
+		curCol = lastCol = e.innerHTML;
+	}
+
+
+	if(lastNdx != ndx) { //clicked a different column
+		document.getElementById(tableID).rows[0].cells[lastNdx].innerHTML = lastCol;
+		lastCol = curCol = e.innerHTML;
+		lastNdx = ndx;
+	}
+
+	if(e.id == "asc") {
+		e.id = "desc";
+		e.innerHTML = curCol + " (Desc)";
+	} else {
+		e.id = "asc";
+		e.innerHTML = curCol + " (Asc)";
+	}
+
+	//Move up from the <th> that was clicked and find the parent table element.
+	var parent = e.parentElement;
+	var s = parent.tagName;
+	while(s.toLowerCase() != "table") {
+		parent = parent.parentElement;
+		s = parent.tagName;
+	}
+
+	//Get the rows to operate on as an array
+	var rows = document.getElementById("replace").rows;
+	var a = new Array();
+	for(i = 0; i < rows.length; i++) {
+		a.push(rows[i]);
+	}
+
+	/**
+	 * Checks to see if a value is numeric.
+	 *
+	 * @param n The incoming value to check.
+	 * @return bool TRUE if value is numeric, FALSE otherwise.
+	 */
+	isNumeric = function (n) {
+		var num = false;
+		if(!isNaN(n) && isFinite(n)) {
+			num = true;
+		}
+		return num;
+	};
+
+	/**
+	 * Compares two values and determines which one is "bigger".
+	 *
+	 * @param x A reference value to check against.
+	 * @param y The value to be determined bigger or smaller than the reference.
+	 * @return TRUE if y is greater or equal to x, FALSE otherwise
+	 */
+	function compare(x, y) {
+		var bigger = false;
+		x = x.cells[ndx].textContent;
+		y = y.cells[ndx].textContent;
+
+		//Parse ints if value is digits only (not precise numbers)
+		if(/^\d+$/.test(x)) {
+			x = parseInt(x);
+		}
+		if(/^\d+$/.test(y)) {
+			y = parseInt(y);
+		}
+
+		//console.log(e.id);
+		if(isNumeric(x) && isNumeric(y)) {
+			if(y >= x) {
+				bigger = (e.id == "asc") ? true : false;
+			} else {
+				bigger = (e.id == "desc") ? true : false;
+			}
+		} else {
+			//Both values are not numeric, so treat both as strings.
+			x = String(x);
+			y = String(y);
+			if(y.localeCompare(x) >= 0) {
+				bigger = (e.id == "asc") ? true : false;
+			} else {
+				bigger = (e.id == "desc") ? true : false;
+			}
+		}
+		return bigger;
+	}
+
+	/**
+	 * Performs a quicksort O(n log n) on an array.
+	 *
+	 * @param array The array that needs sorting
+	 * @return array The sorted array.
+	 */
+	function nlognSort(array) {
+		runs++
+		if(array.length > 1) {
+			var big = new Array();
+			var small = new Array();
+			var pivot = array.pop();
+			var l = array.length;
+			for(i = 0; i < l; i++) {
+				if(compare(pivot,array[i])) {
+					big.push(array[i]);
+				} else {
+					small.push(array[i]);
+				}
+			}
+			return Array.prototype.concat(nlognSort(small), pivot, nlognSort(big));
+		} else {
+			return array;
+		}
+	}
+
+
+	//Run sort routine
+	b = nlognSort(a);
+
+	//Rebuild <tbody> and replace new with the old
+	var tbody = document.createElement("tbody");
+	var l = b.length;
+	for(i = 0; i < l; i++) {
+		tbody.appendChild(b.shift());
+	}
+	parent.removeChild(document.getElementById("replace"));
+	parent.appendChild(tbody);
+	tbody.setAttribute("id","replace");
+}
+
+
+window.onload = function() {
+	initHeaders(tableID);
+}
+
+	</script>
+	<style type="text/css">
+
+	body, a, p, span, ul, ol, li, table, th, tr, td, div, h1, h2, h3, h4, h5, h6 {
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		font-family: "Trebuchet MS", "Helvetica", Arial, sans-serif;
+		font-size: 16px;
+	}
+
+	body {
+		width: 1000px;
+		margin-left: auto;
+		margin-right: auto;
+		background: #d6d1b7;
+	}
+
+	h2 {
+		font-size: 20px;
+		text-align: center;
+	}
+
+	tr.osiAltBG:hover {
+		background: #fffacd;
+	}
+
+	th {
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+	th.osiHeadLeft {
+		text-align: left;
+	}
+
+	th.osiHeadCenter {
+		text-align: center;
+	}
+
+	td.osiTextLeft {
+		text-align: left;
+	}
+
+	td.osiTextCenter {
+		text-align: center;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#header {
+		width: 100%;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+		padding 5px;
+	}
+
+	#content {
+		padding: 5px;
+	}
+
+	#footer {
+		width: 100%;
+		padding: 5px;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+	}
+
+	p {
+		text-align: center;
+	}
+
+	</style>
+</head>
+<body>
+
+<div id="header">
+
+	<h2>OSI Colors Export</h2>
+	<p>Created for user: jwalker on February 19, 2014 2:17:56PM</p>
+
+</div>
+
+<div id="content">
+
+	
+<div class="osiTableBrowse">
+	<div class="osiContent">
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft" style="width: 220px;">Color</th>
+					<th class="osiHeadLeft" style="width: 160px;">Manufacturer</th>
+					<th class="osiHeadLeft" style="width: 130px;">Reference</th>
+					<th class="osiHeadCenter" style="width: 120px;">Match</th>
+					<th class="osiHeadCenter" style="width: 130px;">Must Coat</th>
+					<th class="osiHeadCenter" style="width: 120px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody id="replace">
+				
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue</td>
+				<td class="osiTextLeft">Heartland</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">811</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">813</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue</td>
+				<td class="osiTextLeft">ABTco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">809</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Echo</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Blood</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft">556-6</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">831</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">20</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Iron</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft">PM-120</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">839</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Denim</td>
+				<td class="osiTextLeft">Eagle Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">825</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Stream</td>
+				<td class="osiTextLeft">Marvin Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Ridge</td>
+				<td class="osiTextLeft">Napco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">529</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Stone</td>
+				<td class="osiTextLeft">Weathershield</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">804</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Gray</td>
+				<td class="osiTextLeft">Diamond Kote</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">836</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Spruce</td>
+				<td class="osiTextLeft">Variform</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">517</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Gray</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">811</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Granite</td>
+				<td class="osiTextLeft">Rollex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">595</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Mist</td>
+				<td class="osiTextLeft">ABTco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">809</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Spruce</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 3008</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">757</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Shadow</td>
+				<td class="osiTextLeft">Sherwin-Williams (S/T)</td>
+				<td class="osiTextLeft">S/W 3531</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">810</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Blue Fedora</td>
+				<td class="osiTextLeft">Valspar</td>
+				<td class="osiTextLeft">VR087A</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">887</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Sky Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Harbor Blue</td>
+				<td class="osiTextLeft">Quality/Edge</td>
+				<td class="osiTextLeft">558</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">844</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Slate Blue</td>
+				<td class="osiTextLeft">Quality/Edge</td>
+				<td class="osiTextLeft">803</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">803</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Biscayne Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Colonial Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">803</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Everest Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">807</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Glacier Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">818</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Portsmouth Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">831</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Spruce Blue</td>
+				<td class="osiTextLeft">Alcoa</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">507</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Harbor Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Hawthorn Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">807</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Heritage Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Midnight Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">839</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Mist Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">807</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Mystic Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">819</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Ocean Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Old World Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">838</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Slate Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">817</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Wedgewood Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Windsor Blue</td>
+				<td class="osiTextLeft">Alside</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">809</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Buckland Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft">HC-151</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">825</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">21</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Hamilton Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">17</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Van Courtland Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft">HC-145</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">819</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">30</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Colonial Blue</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">803</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Heritage Blue</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">810</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Icicle Blue</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft">PM-116</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">516</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Ocean Blue</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">823</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Midnight Blue</td>
+				<td class="osiTextLeft">Andersen Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">849</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Heritage Blue</td>
+				<td class="osiTextLeft">Behr</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">827</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Premuim Blue</td>
+				<td class="osiTextLeft">Heartland</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">811</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Aegean Blue</td>
+				<td class="osiTextLeft">Hurd</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">825</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Military Blue</td>
+				<td class="osiTextLeft">Hurd</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">857</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Cape Cod Blue</td>
+				<td class="osiTextLeft">Marvin Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Cascade Blue</td>
+				<td class="osiTextLeft">Marvin Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">857</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Cobalt Blue</td>
+				<td class="osiTextLeft">Marvin Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">855</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Cape Blue</td>
+				<td class="osiTextLeft">Napco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">813</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Savannah Blue</td>
+				<td class="osiTextLeft">Napco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">813</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Slate Blue</td>
+				<td class="osiTextLeft">Napco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Stormy Blue</td>
+				<td class="osiTextLeft">Pella</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">833</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Hudson Blue</td>
+				<td class="osiTextLeft">Pozzi Windows</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Nantucket Blue</td>
+				<td class="osiTextLeft">Valspar</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">825</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Bahama Blue</td>
+				<td class="osiTextLeft">Weiss</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">825</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Orion Blue</td>
+				<td class="osiTextLeft">Weiss</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Savannah Blue</td>
+				<td class="osiTextLeft">Variform</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">809</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Newport Blue</td>
+				<td class="osiTextLeft">Cabot</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">561</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Smoke Blue</td>
+				<td class="osiTextLeft">Cabot</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">807</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Canyon Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">823</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Pacific Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">804</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Steel Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Wedgewood Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Hampton Blue</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Heritage Blue</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">823</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Mountain Blue</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">811</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Pacific Blue</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft">854</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">804</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Classic Blue</td>
+				<td class="osiTextLeft">Rollex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">803</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Pacific Blue</td>
+				<td class="osiTextLeft">Rollex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">804</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Skyline Blue</td>
+				<td class="osiTextLeft">Rollex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Midnight Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">838</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Newburyport Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft">HC-155</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">823</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Shipmate Blue</td>
+				<td class="osiTextLeft">PPG</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">813</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Midnight Blue</td>
+				<td class="osiTextLeft">ABTco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Slate Blue</td>
+				<td class="osiTextLeft">ABTco</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Concord Blue</td>
+				<td class="osiTextLeft">Norandex</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Britanian Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft">1673</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Acadia Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 3011</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Bracing Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 6242</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">811</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Juniper Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 3014</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Moody Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 6221</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Windy Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 6240</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">851</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Boothbay Blue</td>
+				<td class="osiTextLeft">James Hardie</td>
+				<td class="osiTextLeft">JH70-20</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">896</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">805</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Evening Blue</td>
+				<td class="osiTextLeft">James Hardie</td>
+				<td class="osiTextLeft">JH70-30</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">827</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Motor City Blue</td>
+				<td class="osiTextLeft">Valspar</td>
+				<td class="osiTextLeft">405-4A</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">823</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Slate Blue</td>
+				<td class="osiTextLeft">Valspar</td>
+				<td class="osiTextLeft">Valpro</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">819</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Federal Blue</td>
+				<td class="osiTextLeft">Cabot</td>
+				<td class="osiTextLeft">0677</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">801</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Spruce Blue</td>
+				<td class="osiTextLeft">Cabot</td>
+				<td class="osiTextLeft">0640</td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">514</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Federal Blue</td>
+				<td class="osiTextLeft">Cabot (S/S)</td>
+				<td class="osiTextLeft">0177</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">810</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Spruce Blue</td>
+				<td class="osiTextLeft">Cabot (S/T)</td>
+				<td class="osiTextLeft">0340</td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">311</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Midnight Blue</td>
+				<td class="osiTextLeft">Royal</td>
+				<td class="osiTextLeft">4008</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">838</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Smokey Blue</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 7604</td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">885</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Marine Blue</td>
+				<td class="osiTextLeft">Benjamin Moore</td>
+				<td class="osiTextLeft">2059-10</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">887</span></td>
+				<td class="osiTextCenter">5</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">Rookwood Blue Green</td>
+				<td class="osiTextLeft">Sherwin-Williams</td>
+				<td class="osiTextLeft">S/W 2811</td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">422</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+</div>
+
+<div id="footer">
+
+	<p>Generated by: OSI Color Reference Manager v1.2-DEVELOPMENT</p>
+
+</div>
+
+
+</body>
+</html>
