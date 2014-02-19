@@ -121,10 +121,11 @@ if(isset($_GET['a']) && $_GET['a'] == "logout") {
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
 	<title>Cedar Siding Inc. - OSI Color Reference Manager</title>
+	<script type="text/javascript" src="osi/includes/jquery-1.10.1.min.js"></script>
 	<script type="text/javascript" src="osi/includes/osi.js"></script>
-	<script type="text/javascript" src="osi/includes/tableSort.js"></script>
+	<script type="text/javascript" src="osi/includes/tableSort.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="osi/includes/OSIStyles.css" media="all" />
 </head>
 <body>
@@ -135,6 +136,9 @@ if(isset($_GET['a']) && $_GET['a'] == "logout") {
 	<a href="#"></a>
 	</div>
 
+
+	<div id="b2t"><a href="#header">Back to top</a></div>
+	<script type="text/javascript" src="osi/includes/linkbox.min.js"></script>
 
 	<div id="navbar">
 

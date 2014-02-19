@@ -1491,7 +1491,7 @@ class OSICore
 								$export = str_replace("[CreateTime]",$etime,$export);
 								$export = str_replace("[SystemVersion]",OSI_VERSION,$export);
 								$export = str_replace("[SearchResults]",$foutput,$export);
-								$export = str_replace("[TableSorter]",file_get_contents(INCLUDES."tableSort.js"),$export);
+								$export = str_replace("[TableSorter]",file_get_contents(INCLUDES."tableSort.min.js"),$export);
 								fwrite($file,$export);
 								fclose($file);
 								$output = str_replace("[ExportOptions]","<span class=\"export\">Export Results: <a href=\"".$_SERVER['PHP_SELF']."?a=colorSearch&amp;exportResults=html\">HTML</a> | <a href=\"".$_SERVER['PHP_SELF']."?a=colorSearch&amp;exportResults=csv\">CSV</a></span>",$output);
@@ -1605,7 +1605,7 @@ class OSICore
 									$export = str_replace("[CreateTime]",$etime,$export);
 									$export = str_replace("[SystemVersion]",OSI_VERSION,$export);
 									$export = str_replace("[SearchResults]",$foutput,$export);
-									$export = str_replace("[TableSorter]", file_get_contents(INCLUDES."tableSort.js"),$export);
+									$export = str_replace("[TableSorter]", file_get_contents(INCLUDES."tableSort.min.js"),$export);
 									fwrite($file,$export);
 									fclose($file);
 									$output = str_replace("[ExportOptions]","<span class=\"export\">Export Results: <a href=\"".$_SERVER['PHP_SELF']."?a=browseManufacturerColors&amp;exportResults=html&amp;manID=".$newMan."\">HTML</a> | <a href=\"".$_SERVER['PHP_SELF']."?a=browseManufacturerColors&amp;exportResults=csv&amp;manID=".$newMan."\">CSV</a></span>",$output);

@@ -60,6 +60,7 @@ function tableSort(e) {
 
 	if(lastNdx != ndx) { //clicked a different column
 		document.getElementById(tableID).rows[0].cells[lastNdx].innerHTML = lastCol;
+		document.getElementById(tableID).rows[0].cells[lastNdx].id = "";
 		lastCol = curCol = e.innerHTML;
 		lastNdx = ndx;
 	}
@@ -112,6 +113,15 @@ function tableSort(e) {
 		var bigger = false;
 		x = x.cells[ndx].textContent;
 		y = y.cells[ndx].textContent;
+
+		//Parse ints if value is digits only (not precise numbers)
+		if(/^\d+$/.test(x)) {
+			x = parseInt(x);
+		}
+		if(/^\d+$/.test(y)) {
+			y = parseInt(y);
+		}
+
 		//console.log(e.id);
 		if(isNumeric(x) && isNumeric(y)) {
 			if(y >= x) {
@@ -120,6 +130,9 @@ function tableSort(e) {
 				bigger = (e.id == "desc") ? true : false;
 			}
 		} else {
+			//Both values are not numeric, so treat both as strings.
+			x = String(x);
+			y = String(y);
 			if(y.localeCompare(x) >= 0) {
 				bigger = (e.id == "asc") ? true : false;
 			} else {

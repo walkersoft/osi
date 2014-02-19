@@ -2,7 +2,7 @@
 -- Custom style sheet for CSI website, OSICRM -- */
 
 /*=====================================================
- -- SITE SPECIFIC CSS -- 
+ -- SITE SPECIFIC CSS --
 ======================================================*/
 
 /* -- CSS RESET -- */
@@ -97,7 +97,7 @@ table.splash {
 	margin-left: auto;
 	margin-right: auto;
 	border-collapse: collapse;
-	
+
 }
 
 td.splashLeft {
@@ -221,7 +221,7 @@ a:hover {
 }
 
 /*=====================================================
- -- OSI COLOR REFERENCE SPECIFIC CSS -- 
+ -- OSI COLOR REFERENCE SPECIFIC CSS --
 ======================================================*/
 
 
@@ -241,7 +241,7 @@ a:hover {
 
 #nav li
 {
-	float: left; 
+	float: left;
 	display: inline;
 	padding: 0px;
 	margin: 0px;
@@ -270,7 +270,7 @@ a:hover {
 	text-decoration: none;
 }
 
-#nav li ul 
+#nav li ul
 {
 	background: #666;
 	list-style: none;
@@ -285,7 +285,7 @@ a:hover {
 	z-index: 2;
 	vertical-align: top;
 }
-	
+
 #nav ul a
 {
 	white-space: nowrap;
@@ -322,13 +322,13 @@ a:hover {
 }
 
 /*=====================================================
- -- VIEW / TABLE SPECIFIC CSS -- 
+ -- VIEW / TABLE SPECIFIC CSS --
 ======================================================*/
 
 table {
 	margin: auto;
-	border-collapse: collapse;
-	border-spacing: 0;
+	/*border-collapse: collapse;*/
+	border-spacing: 1px;
 }
 
 table.form {
@@ -458,3 +458,21 @@ div.osiContent {
 	margin-right: auto;
 	margin-top: 25px;
 }
+
+div#b2t {
+	position: absolute;
+	left: -10000px;
+	border: 2px solid #660000;
+	background: rgba(214,209,183,.5);
+	padding: 8px;
+	z-index: 5;
+}
+
+.sortable:hover {
+	background: #ffdab9;
+}
+
+th#asc, th#desc {
+	background: #d2b48c;
+}
+
