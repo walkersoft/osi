@@ -3,18 +3,19 @@
 //SET THE SYSTEM VERSION
 //This is the version number that will be displayed on the website
 //and in HTML export files.
-define("OSI_VERSION","1.2-DEVELOPMENT");
+define("OSI_VERSION","1.2");
 
 //SET IF THE OS THE SERVER IS RUNNING IS WINDOWS
 //Session path slashes must be reversed from Linus style slashes.
 //Default for production environment: false
-define("WINDOWS",true);
+define("WINDOWS",false);
 
 //SET SESSION DIRECTORY
 //Change this path to match where the session directory is located
 //relative to DOCUMENT_ROOT
 //Default for production environment: /osi/sessions
-define("SESSIONS","/osi/v1.2/osi/sessions");
+//Default for development environment: /osi/vX.X/osi/sessions
+define("SESSIONS","/osi/sessions");
 
 //DEFINE SOME DIRECTORY LOCATIONS
 define("OSI","osi/");
@@ -126,7 +127,7 @@ if(isset($_GET['a']) && $_GET['a'] == "logout") {
 	<script type="text/javascript" src="osi/includes/jquery-1.10.1.min.js"></script>
 	<script type="text/javascript" src="osi/includes/osi.js"></script>
 	<script type="text/javascript" src="osi/includes/tableSort.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="osi/includes/OSIStyles.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="osi/includes/OSIStyles-1.2.css" media="all" />
 </head>
 <body>
 

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=9" />
+	<title>OSI Colors Export - February 20, 2014 11:03:32AM</title>
+	<script language="javscript" type="text/javascript">
+
+	function initHeaders(e){e=document.getElementById(e);for(var t=e.rows[0].cells.length,r=0;t>r;r++)e.rows[0].cells[r].addEventListener?e.rows[0].cells[r].addEventListener("click",tableSort,!1):e.rows[0].cells[r].attachEvent&&e.rows[0].cells[r].attachEvent("onclick",tableSort)}function tableSort(e){function t(t,r){var n=!1;return t=t.cells[l].textContent,r=r.cells[l].textContent,/^\d+$/.test(t)&&(t=parseInt(t)),/^\d+$/.test(r)&&(r=parseInt(r)),isNumeric(t)&&isNumeric(r)?n=r>=t?"asc"==e.id?!0:!1:"desc"==e.id?!0:!1:(t=String(t),r=String(r),n=r.localeCompare(t)>=0?"asc"==e.id?!0:!1:"desc"==e.id?!0:!1),n}function r(e){if(n++,e.length>1){var l=new Array,a=new Array,o=e.pop(),s=e.length;for(i=0;s>i;i++)t(o,e[i])?l.push(e[i]):a.push(e[i]);return Array.prototype.concat(r(a),o,r(l))}return e}var n=0,l=0;if(e.currentTarget)e=e.currentTarget;else{if(!window.event.srcElement)return console.log("Unable to determine source event. Terminating...."),!1;e=window.event.srcElement}l=e.cellIndex,-1==curNdx&&-1==lastNdx&&(curNdx=lastNdx=l),""==lastCol&&""==curCol&&(curCol=lastCol=e.innerHTML),lastNdx!=l&&(document.getElementById(tableID).rows[0].cells[lastNdx].innerHTML=lastCol,document.getElementById(tableID).rows[0].cells[lastNdx].id="",lastCol=curCol=e.innerHTML,lastNdx=l),"asc"==e.id?(e.id="desc",e.innerHTML=curCol+" (Desc)"):(e.id="asc",e.innerHTML=curCol+" (Asc)");for(var a=e.parentElement,o=a.tagName;"table"!=o.toLowerCase();)a=a.parentElement,o=a.tagName;var s=document.getElementById("replace").rows,c=new Array;for(i=0;i<s.length;i++)c.push(s[i]);isNumeric=function(e){var t=!1;return!isNaN(e)&&isFinite(e)&&(t=!0),t},b=r(c);var d=document.createElement("tbody"),u=b.length;for(i=0;u>i;i++)d.appendChild(b.shift());a.removeChild(document.getElementById("replace")),a.appendChild(d),d.setAttribute("id","replace")}var tableID="sortable",lastCol="",curCol="",lastNdx=-1,curNdx=-1;window.onload=function(){initHeaders(tableID)};
+
+	</script>
+	<style type="text/css">
+
+	body, a, p, span, ul, ol, li, table, th, tr, td, div, h1, h2, h3, h4, h5, h6 {
+		border: 0px;
+		padding: 0px;
+		margin: 0px;
+		font-family: "Trebuchet MS", "Helvetica", Arial, sans-serif;
+		font-size: 16px;
+	}
+
+	body {
+		width: 1000px;
+		margin-left: auto;
+		margin-right: auto;
+		background: #d6d1b7;
+	}
+
+	h2 {
+		font-size: 20px;
+		text-align: center;
+	}
+
+	tr.osiAltBG:hover {
+		background: #fffacd;
+	}
+
+	th {
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+	th.osiHeadLeft {
+		text-align: left;
+	}
+
+	th.osiHeadCenter {
+		text-align: center;
+	}
+
+	td.osiTextLeft {
+		text-align: left;
+	}
+
+	td.osiTextCenter {
+		text-align: center;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#header {
+		width: 100%;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+		padding 5px;
+	}
+
+	#content {
+		padding: 5px;
+	}
+
+	#footer {
+		width: 100%;
+		padding: 5px;
+		color: #eee;
+		background: #800;
+		border: 2px #333 solid;
+	}
+
+	p {
+		text-align: center;
+	}
+
+	.sortable:hover, th#asc, th#desc {
+		background: #ffdead;
+	}
+
+	</style>
+</head>
+<body>
+
+<div id="header">
+
+	<h2>OSI Colors Export</h2>
+	<p>Created for user: jwalker on February 20, 2014 11:03:32AM</p>
+
+</div>
+
+<div id="content">
+
+	
+<div class="osiTableBrowse">
+	<div class="osiContent">
+		<table id="sortable">
+			<thead>
+				<tr>
+					<th class="osiHeadLeft sortable" style="width: 220px;">Color</th>
+					<th class="osiHeadLeft sortable" style="width: 160px;">Manufacturer</th>
+					<th class="osiHeadLeft sortable" style="width: 130px;">Reference</th>
+					<th class="osiHeadCenter sortable" style="width: 120px;">Match</th>
+					<th class="osiHeadCenter sortable" style="width: 130px;">Must Coat</th>
+					<th class="osiHeadCenter sortable" style="width: 120px;">LRV</th>
+				</tr>
+			</thead>
+			<tbody id="replace">
+				
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Bright White</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">005</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Butter Cream</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">634</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Cocoa</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">274</span></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">211</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Culinary Herb</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">746</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Dark Khaki</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">338</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Desert Sand</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">405</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Ebony Gray</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">839</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI English Walnut</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">253</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Garden Sage</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">729</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Harborside Grey</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">537</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Marine Grey</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">544</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Midnight Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">838</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Roasted Almond</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span title="Sealant is stocked locally by CSI">451</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Rustic Red</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">907</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Sky Blue</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter"><span style="color: #ff0000;" title="Sealant must be ordered from Henkel">815</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			<tr class="osiAltBG">
+				<td class="osiTextLeft">CSI Summer Wheat</td>
+				<td class="osiTextLeft">Designer Collection</td>
+				<td class="osiTextLeft"></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">445</span></td>
+				<td class="osiTextCenter"><span style="color: #6a5acd;" title="Sealant must be ordered from Woolf">000</span></td>
+				<td class="osiTextCenter">0</td>
+			</tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+</div>
+
+<div id="footer">
+
+	<p>Generated by: OSI Color Reference Manager v1.2-DEVELOPMENT</p>
+
+</div>
+
+
+</body>
+</html>

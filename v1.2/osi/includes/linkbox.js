@@ -1,4 +1,4 @@
-var threshold = 400;  //Pixel height to scroll to before activated link
+var threshold = 250;  //Pixel height to scroll to before activated link
 var phaseSpeed = 600; //Speed to show/hide linkbox
 var rightBuff = 70;   //Pixel amount for right hand buffer
 var lowerBuff = 100;   //Pixel amount for lower buffer
@@ -18,16 +18,13 @@ function calcBoxCoords()
 
 function checkThreshold()
 {
-	//console.log("Checking Threshhold...");
 	if($(window).scrollTop() > threshold) {
-		//console.log("past thresh");
 		if(!linkup) {
 			linkup = true;
 			showLink();
 		}
 		return true;
 	} else {
-		//console.log("not past thresh");
 		linkup = false;
 		hideLink();
 	}
@@ -36,7 +33,6 @@ function checkThreshold()
 
 function showLink()
 {
-	//console.log("Showing link...");
 	var coords = calcBoxCoords();
 	linkbox.hide();
 	linkbox.css( { "left" : coords.x,
@@ -48,7 +44,6 @@ function showLink()
 
 function hideLink()
 {
-	//console.log("Hiding link...");
 	linkbox.fadeOut(phaseSpeed);
 }
 

@@ -40,7 +40,6 @@ function tableSort(e) {
 	} else if(window.event.srcElement) { //IE specific method
 		e = window.event.srcElement;
 	} else {
-		console.log("Unable to determine source event. Terminating....");
 		return false;
 	}
 
