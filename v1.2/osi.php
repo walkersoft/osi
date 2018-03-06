@@ -18,12 +18,12 @@ define("WINDOWS",false);
 define("SESSIONS","/osi/sessions");
 
 //DEFINE SOME DIRECTORY LOCATIONS
-define("OSI","osi/");
-define("LIBRARY",OSI."lib/");
-define("DATA",OSI."data/");
-define("INCLUDES",OSI."includes/");
-define("BACKUPS",OSI."backups/");
-define("TMPDIR",OSI."tmp/");
+define("OSI","osi".DIRECTORY_SEPARATOR);
+define("LIBRARY",OSI."lib".DIRECTORY_SEPARATOR);
+define("DATA",OSI."data".DIRECTORY_SEPARATOR);
+define("INCLUDES",OSI."includes".DIRECTORY_SEPARATOR);
+define("BACKUPS",OSI."backups".DIRECTORY_SEPARATOR);
+define("TMPDIR",OSI."tmp".DIRECTORY_SEPARATOR);
 
 // LOAD THE LIBRARY
 require_once(LIBRARY."Exceptions.php");
@@ -44,13 +44,15 @@ $sessionpath = $_SERVER['DOCUMENT_ROOT'].SESSIONS;
 if(WINDOWS) {
 	$sessionpath = str_replace("/","\\",$sessionpath);
 }
-session_save_path($sessionpath);
+//session_save_path($sessionpath);
+ini_set('session.save_path', $sessionpath);
 ini_set('session.gc_maxlifetime',4*60*60);
 ini_set('session.gc_probability',1);
 ini_set('session.gc_divisor',100);
 ini_set('session.cookie_lifetime',0);
 session_start();
 if(!isset($_SESSION['lastStatus'])) $_SESSION['lastStatus'] = "";
+
 
 // SET THE TIMEZONE
 date_default_timezone_set("America/Chicago");
